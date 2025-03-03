@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="A physics-based Golf game with realistic ball mechanics and trajectory prediction">
-    <meta name="keywords" content="Golf, physics game, sports simulation">
-    <meta name="viewport" content="width=device=width, initial-scale=1.0">
-     <link rel="stylesheet" href="golfphysics.com">
     <title>Golf Physics</title>
     <style>
         body {
@@ -14,26 +9,14 @@
             background-position: center;
             font-family: Arial, sans-serif;
             margin: 0;
-            overflow-x: auto;
-            overflow-y: hidden;
+            padding: 0;
+            overflow: hidden;
             height: 100vh;
-            position: 10vh;
-            display:flex;
-            align-items: center;
-            transition: background 0.5s ease-out;
-           
-            
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            min-width: 100vw;
-            width: max-content;
-            max-width: 5000m;
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
-            overflow-x: auto;
+            width: 100vw;
+            max-width: 100vw;
             scroll-behavior: smooth;
         }
         
@@ -144,7 +127,7 @@
         <h3>Golf Physics</h3>
         <div class="variables">
             <label>Velocity (m/s):
-                <input type="range" id="velocitySlider" min="0" max="100" value="0" step="0.5">
+                <input type="range" id="velocitySlider" min="0" max="100" value="0" step="0.1">
                 <span id="velocityValue">0</span>
             </label>
             <label>Angle (degrees):
@@ -152,7 +135,7 @@
                 <span id="angleValue">0</span>
             </label>
             <label>Distance from Hole (m):
-                <input type="range" id="distanceSlider" min="0" max="5000" value="0" step="50">
+                <input type="range" id="distanceSlider" min="0" max="1000" value="0" step="10">
                 <span id="distanceValue">0</span>
             </label>
         </div>
@@ -182,20 +165,25 @@
         canvas.width = baseWidth;
         canvas.height = window.innerHeight;
 
-        const getScale = () => canvas.width / 5800;
+        const getScale = () => canvas.width / 1200; // Update scale to 1000m
         const minWidth = baseWidth * 100; 
-        const maxWidth = baseWidth * 5800;
+        const maxWidth = baseWidth * 1200; // Update maxWidth to 1000m
         
         const groundLevel = canvas.height - 150;
 
         let score = 0;
-        const g = 9.81;
+       // Constants
+       const g = 9.81; // Gravity (m/s^2)
+        const timeStep = 0.02; // Time increment per frame (s)  
         let ball = {
             x: canvas.width - 100 - (100 * getScale()),
-            y: canvas.height - 100,
-            radius: .8 * getScale() * 100,
-            vx: 0,
-            vy: 0,
+            y: canvas.height - 110,
+            radius: .5 * getScale() * 100, // Make the ball smaller
+            v0: 50, // Initial speed (m/s)
+            angle: Math.PI / 4, // 45-degree launch angle
+            vx: 50 * Math.cos(Math.PI / 4),
+            vy: -50 * Math.sin(Math.PI / 4),
+            t: 0,
             isMoving: false,
             isDragging: false,
             hasLanded: false
@@ -203,10 +191,10 @@
 
         const hole = {
             x: canvas.width - 150,
-            y: canvas.height - 42,
-            radius: .9 * getScale() * 100,
-            flagHeight: 2.5 * getScale() * 100,
-            flagWidth: 0.7 * getScale() * 100
+            y: canvas.height = ball.y + 68 ,
+            radius: .7 * getScale() * 100, // Make the hole smaller
+            flagHeight: 2 * getScale() * 100, // Make the flag smaller
+            flagWidth: 0.5 * getScale() * 100 // Make the flag smaller
         };
 
         let isDragging = false;
@@ -218,37 +206,12 @@
         let timeTraveled = 0;
 
         function updateCameraZoom() {
-            const distance = Math.abs(calculateDistance());
-            if (distance < 100) {
-                cameraZoom = 2.5; // Close zoom when near hole
-            } else if (distance < 500) {
-                cameraZoom = 1.5; // Medium zoom
-            } else {
-                cameraZoom = 1; // Default zoom
-            }
-            
-            // Apply transition to ball and hole elements
-            const ballTransform = `scale(${cameraZoom})`;
-            const holeTransform = `scale(${cameraZoom})`;
-            
-            ctx.save();
-            ctx.translate(ball.x, ball.y);
-            ctx.scale(cameraZoom, cameraZoom);
-            ctx.translate(-ball.x, -ball.y);
-            drawBall();
-            ctx.restore();
-            
-            ctx.save();
-            ctx.translate(hole.x, hole.y);
-            ctx.scale(cameraZoom, cameraZoom);
-            ctx.translate(-hole.x, -hole.y);
-            drawHole();
-            ctx.restore();
+            // No zooming logic needed
         }
 
         function resetBall() {
             ball.x = hole.x - (25 * getScale());
-            ball.y = canvas.height  - 195;
+            ball.y = canvas.height  - 180;
             ball.vx = 0;
             ball.vy = 0;
             ball.isMoving = false;
@@ -290,8 +253,8 @@
             const angle = parseFloat(document.getElementById('angleSlider').value);
             const radians = angle * Math.PI / 180;
             
-            ball.vx = velocity * Math.cos(radians) * getScale();
-            ball.vy = -velocity * Math.sin(radians) * getScale();
+            ball.vx = velocity * Math.cos(radians);
+            ball.vy = -velocity * Math.sin(radians);
             
             ball.isMoving = true;
             initialDistance = calculateDistance();
@@ -299,10 +262,10 @@
             function updateBallPosition() {
                 if (!ball.isMoving) return;
                 
-                ball.x += ball.vx;
-                ball.y += ball.vy;
+                ball.x += ball.vx  / 60; // Convert velocity to per frame movement
+                ball.y += ball.vy / 60;
                 
-                ball.vy += g * getScale() / 60;
+                ball.vy += g / 60; // Apply gravity per frame
                 
                 updateCameraZoom();
                 
@@ -354,8 +317,8 @@
         function calculateTrajectoryPoints(startX, startY, velocity, angle) {
             const points = [];
             const radians = angle * Math.PI / 180;
-            const vx = velocity * Math.cos(radians) * getScale();
-            const vy = -velocity * Math.sin(radians) * getScale();
+            const vx = velocity * Math.cos(radians);
+            const vy = -velocity * Math.sin(radians);
             let x = startX;
             let y = startY;
             let t = 0;
@@ -364,7 +327,7 @@
                 points.push({x, y});
                 t += 1/60;
                 x = startX + vx * t;
-                y = startY + vy * t + (0.5 * g * getScale() * t * t);
+                y = startY + vy * t + (0.5 * g * t * t);
             }
             
             return points;
@@ -405,38 +368,32 @@
         }
 
         function drawBall() {
-            const distanceFromHole = calculateDistance();
-            const objectScale = Math.max(0.45, 1 - (Math.abs(distanceFromHole) / 1000));
-            
             ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius * objectScale, 0, Math.PI * 2);
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2); // Remove cameraZoom adjustment
             ctx.fillStyle = 'white';
             ctx.fill();
             ctx.closePath();
         }
 
         function drawHole() {
-            const distanceFromHole = calculateDistance();
-            const objectScale = Math.max(0.45, 1 - (Math.abs(distanceFromHole) / 1000));
-            
             ctx.beginPath();
-            ctx.arc(hole.x, hole.y, hole.radius * objectScale, 0, Math.PI * 1);
+            ctx.arc(hole.x, hole.y, hole.radius, 0, Math.PI * 1); // Remove cameraZoom adjustment
             ctx.fillStyle = '#333';
             ctx.fill();
             ctx.closePath();
             
             ctx.beginPath();
             ctx.moveTo(hole.x, hole.y);
-            ctx.lineTo(hole.x, hole.y - (hole.flagHeight * objectScale));
+            ctx.lineTo(hole.x, hole.y - hole.flagHeight); // Remove cameraZoom adjustment
             ctx.strokeStyle = '#666';
-            ctx.lineWidth = 3 * objectScale;
+            ctx.lineWidth = 3; // Remove cameraZoom adjustment
             ctx.stroke();
             
             ctx.beginPath();
-            ctx.moveTo(hole.x, hole.y - (hole.flagHeight * objectScale));
-            ctx.lineTo(hole.x + (hole.flagWidth * objectScale), 
-                      hole.y - (hole.flagHeight * objectScale) + (hole.flagWidth * objectScale/2));
-            ctx.lineTo(hole.x, hole.y - (hole.flagHeight * objectScale) + (hole.flagWidth * objectScale));
+            ctx.moveTo(hole.x, hole.y - hole.flagHeight); // Remove cameraZoom adjustment
+            ctx.lineTo(hole.x + hole.flagWidth, 
+                      hole.y - hole.flagHeight + hole.flagWidth / 2); // Remove cameraZoom adjustment
+            ctx.lineTo(hole.x, hole.y - hole.flagHeight + hole.flagWidth); // Remove cameraZoom adjustment
             ctx.fillStyle = 'red';
             ctx.fill();
             ctx.closePath();
@@ -445,7 +402,7 @@
         function drawScale() {
             ctx.fillStyle = 'white';
             ctx.font = '12px Arial';
-            for(let i = 0; i <= 5000; i += 200 ){
+            for(let i = 0; i <= 1000; i += 100 ){ // Update scale to 1000m
                 const x = hole.x - (i * getScale());
                 ctx.fillRect(x, canvas.height - 30, 2, 10); // Small line for indication
                 ctx.fillText(`${i}m`, x - 10, canvas.height - 5); // Lower the text
@@ -487,18 +444,17 @@
             const currentWidth = canvas.width;
             canvas.width = Math.max(window.innerWidth, currentWidth);
             canvas.height = window.innerHeight;
-            hole.x = canvas.width - 180;
+            hole.x = canvas.width - 120;
             
-            ball.radius = .7 * getScale() * 100;
-            hole.radius = 0.9 * getScale() * 100;
-            hole.flagHeight = 2.5 * getScale() * 100;
-            hole.flagWidth = 0.9 * getScale() * 100;
+            ball.radius = 0.05 * getScale() * 100; // Make the ball smaller
+            hole.radius = .07 * getScale() * 100; // Make the hole smaller
+            hole.flagHeight = 0.2 * getScale() * 100; // Make the flag smaller
+            hole.flagWidth = 0.05 * getScale() * 100; // Make the flag smaller
 
             if (!ball.isMoving && !ball.isDragging && !ball.hasLanded) {
                 ball.x = hole.x - (100*getScale());
                 ball.y = canvas.height - 180;
                 initialDistance = calculateDistance();
-                updateCameraZoom();
             }
         });
     </script>
