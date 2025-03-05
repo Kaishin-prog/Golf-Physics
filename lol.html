@@ -4,19 +4,31 @@
     <title>Golf Physics</title>
     <style>
         body {
-            background-image: url('mountain-game-background_22191-30.jpg');
+             background-image: url('mountain-game-background_22191-30.jpg');
             background-size: cover;
             background-position: center;
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: hidden;
             height: 100vh;
-            display: flex;
-            justify-content: center;
+            position: 10vh;
+            display:flex;
             align-items: center;
-            width: 100vw;
+            transition: background 0.5s ease-out;
+           
+            
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            min-width: 100vw;
+            width: max-content;
             max-width: 100vw;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-x: auto;
             scroll-behavior: smooth;
         }
         
