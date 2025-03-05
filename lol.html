@@ -10,7 +10,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Changed from auto to hidden */
+            overflow: hidden;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -165,9 +165,9 @@
         canvas.width = baseWidth;
         canvas.height = window.innerHeight;
 
-        const getScale = () => canvas.width / 800; // Adjusted scale to make view closer
+        const getScale = () => canvas.width / 1200; // Update scale to 1000m
         const minWidth = baseWidth * 100; 
-        const maxWidth = baseWidth * 800; // Adjusted maxWidth to make view closer
+        const maxWidth = baseWidth * 1200; // Update maxWidth to 1000m
         
         const groundLevel = canvas.height - 150;
 
@@ -176,9 +176,9 @@
        const g = 9.81; // Gravity (m/s^2)
         const timeStep = 0.02; // Time increment per frame (s)  
         let ball = {
-            x: canvas.width - 180 - (100 * getScale()),
-            y: canvas.height - 100,
-            radius: .05 * getScale() * 100, // Make the ball smaller
+            x: canvas.width - 100 - (100 * getScale()),
+            y: canvas.height - 110,
+            radius: .5 * getScale() * 100, // Make the ball smaller
             v0: 50, // Initial speed (m/s)
             angle: Math.PI / 4, // 45-degree launch angle
             vx: 50 * Math.cos(Math.PI / 4),
@@ -191,10 +191,10 @@
 
         const hole = {
             x: canvas.width - 150,
-            y: canvas.height = 180 ,
-            radius: .07 * getScale() * 100, // Make the hole smaller
-            flagHeight: 0.02 * getScale() * 100, // Make the flag smaller
-            flagWidth: 0.05 * getScale() * 100 // Make the flag smaller
+            y: canvas.height = ball.y + 68 ,
+            radius: .7 * getScale() * 100, // Make the hole smaller
+            flagHeight: 2 * getScale() * 100, // Make the flag smaller
+            flagWidth: 0.5 * getScale() * 100 // Make the flag smaller
         };
 
         let isDragging = false;
@@ -211,7 +211,7 @@
 
         function resetBall() {
             ball.x = hole.x - (25 * getScale());
-            ball.y = canvas.height  - 175;
+            ball.y = canvas.height  - 180;
             ball.vx = 0;
             ball.vy = 0;
             ball.isMoving = false;
