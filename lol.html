@@ -176,8 +176,8 @@
        const g = 9.81; // Gravity (m/s^2)
         const timeStep = 0.02; // Time increment per frame (s)  
         let ball = {
-            x: canvas.width - 180 - (100 * getScale()),
-            y: canvas.height - 100,
+            x: canvas.width - 100 - (100 * getScale()),
+            y: canvas.height - 180,
             radius: .05 * getScale() * 100, // Make the ball smaller
             v0: 50, // Initial speed (m/s)
             angle: Math.PI / 4, // 45-degree launch angle
@@ -191,7 +191,7 @@
 
         const hole = {
             x: canvas.width - 150,
-            y: canvas.height = 180 ,
+            y: canvas.height = ball.x ,
             radius: .07 * getScale() * 100, // Make the hole smaller
             flagHeight: 0.02 * getScale() * 100, // Make the flag smaller
             flagWidth: 0.05 * getScale() * 100 // Make the flag smaller
