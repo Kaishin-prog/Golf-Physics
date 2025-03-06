@@ -211,7 +211,7 @@
 
         function resetBall() {
             ball.x = hole.x - (25 * getScale());
-            ball.y = canvas.height  - 180;
+            ball.y = canvas.height  - 110;
             ball.vx = 0;
             ball.vy = 0;
             ball.isMoving = false;
@@ -233,7 +233,7 @@
             document.getElementById('finalMessageTitle').textContent = message;
             // Update max height and time traveled inside the pop-up
             // The max height display is calculated similarly as in the distance display section
-            document.getElementById('finalMaxHeight').textContent = (canvas.height - maxHeight - 180).toFixed(1);
+            document.getElementById('finalMaxHeight').textContent = (canvas.height - maxHeight - 110).toFixed(1);
             document.getElementById('finalTimeTraveled').textContent = timeTraveled.toFixed(1);
             finalDistanceElement.style.display = 'block';
         }
