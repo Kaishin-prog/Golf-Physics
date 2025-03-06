@@ -269,8 +269,8 @@
                 
                 updateCameraZoom();
                 
-                if (ball.y > canvas.height - 180) {
-                    ball.y = canvas.height - 180;
+                if (ball.y > canvas.height - 110) {
+                    ball.y = canvas.height - 110;
                     ball.vy = 0;
                     ball.vx = 0;
                     ball.isMoving = false;
@@ -431,7 +431,8 @@
             document.getElementById('distanceValue').textContent = distance;
             if (!ball.isMoving && !ball.hasLanded) {
                 ball.x = hole.x - (distance * getScale());
-                ball.y = canvas.height - 180;
+                ball.y = canvas.height - 110;
+                hole.x = canvas.height - 110;
                 initialDistance = distance;
                 document.getElementById('currentDistance').textContent = '0.0';
                 updateCameraZoom();
