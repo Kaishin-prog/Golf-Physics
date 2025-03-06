@@ -178,7 +178,7 @@
         let ball = {
             x: canvas.width - 100 - (100 * getScale()),
             y: canvas.height - 180,
-            radius: .5 * getScale() * 100, // Make the ball smaller
+            radius: .05 * getScale() * 100, // Make the ball smaller
             v0: 50, // Initial speed (m/s)
             angle: Math.PI / 4, // 45-degree launch angle
             vx: 50 * Math.cos(Math.PI / 4),
@@ -191,10 +191,10 @@
 
         const hole = {
             x: canvas.width - 150,
-            y: canvas.height - 400 ,
-            radius: .7 * getScale() * 100, // Make the hole smaller
-            flagHeight: 2 * getScale() * 100, // Make the flag smaller
-            flagWidth: 0.5 * getScale() * 100 // Make the flag smaller
+            y: canvas.height - 150 ,
+            radius: .07 * getScale() * 100, // Make the hole smaller
+            flagHeight: 0.5 * getScale() * 100, // Make the flag smaller
+            flagWidth: 0.05 * getScale() * 100 // Make the flag smaller
         };
 
         let isDragging = false;
