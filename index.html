@@ -178,7 +178,7 @@
         let ball = {
             x: canvas.width - 100 - (100 * getScale()),
             y: canvas.height - 110,
-            radius: .05 * getScale() * 100, // Make the ball smaller
+            radius: .09 * getScale() * 100, // Make the ball smaller
             v0: 50, // Initial speed (m/s)
             angle: Math.PI / 4, // 45-degree launch angle
             vx: 50 * Math.cos(Math.PI / 4),
@@ -192,9 +192,9 @@
         const hole = {
             x: canvas.width - 150,
             y: canvas.height - 110 ,
-            radius: .07 * getScale() * 100, // Make the hole smaller
-            flagHeight: 0.2 * getScale() * 100, // Make the flag smaller
-            flagWidth: 0.05 * getScale() * 100 // Make the flag smaller
+            radius: .09 * getScale() * 100, // Make the hole smaller
+            flagHeight: 0.25 * getScale() * 100, // Make the flag smaller
+            flagWidth: 0.07 * getScale() * 100 // Make the flag smaller
         };
 
         let isDragging = false;
@@ -447,10 +447,10 @@
             hole.y = canvas.width - 120;
             hole.x = canvas.height - 110;
             
-            ball.radius = 0.05 * getScale() * 100; // Make the ball smaller
-            hole.radius = .07 * getScale() * 100; // Make the hole smaller
-            hole.flagHeight = 0.2 * getScale() * 100; // Make the flag smaller
-            hole.flagWidth = 0.05 * getScale() * 100; // Make the flag smaller
+            ball.radius = 0.09 * getScale() * 100; // Make the ball smaller
+            hole.radius = .09 * getScale() * 100; // Make the hole smaller
+            hole.flagHeight = 0.25 * getScale() * 100; // Make the flag smaller
+            hole.flagWidth = 0.07 * getScale() * 100; // Make the flag smaller
 
             if (!ball.isMoving && !ball.isDragging && !ball.hasLanded) {
                 ball.x = hole.y - (100*getScale());
